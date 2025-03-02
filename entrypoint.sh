@@ -18,6 +18,7 @@ ${LOG_PATH}/*.log {
     rotate ${HISTORY}
     missingok
     notifempty
+    copytruncate
 EOF
 
 if [ "${COMPRESS}" = "true" ]; then
