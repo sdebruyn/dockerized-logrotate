@@ -14,4 +14,4 @@ Set the following environment variables to customize the container:
 - **DATEEXT:** Append dates to rotated filenames (`true` or `false`). Default: `true`
 - **RUN_INTERVAL:** Interval in seconds between logrotate executions. Default: `60`
 
-See [Docker Composer file](docker-compose.yml) for an example configuration.
+See [Docker Compose file](docker-compose.yml) for an example configuration.
