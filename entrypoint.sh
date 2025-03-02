@@ -14,7 +14,7 @@ RUN_INTERVAL="${RUN_INTERVAL:-60}"
 cat <<EOF > /etc/logrotate.d/app_logrotate
 ${LOG_PATH}/*.log {
     ${LOGROTATE_INTERVAL}
-    size ${MAX_SIZE}
+    maxsize ${MAX_SIZE}
     rotate ${HISTORY}
     missingok
     notifempty
