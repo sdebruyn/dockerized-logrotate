@@ -41,6 +41,9 @@ cat /etc/logrotate.d/app_logrotate
 # Ensure the log directory exists
 mkdir -p "${LOG_PATH}"
 
+# Ensure the status directory exists for logrotate
+mkdir -p /var/lib/logrotate
+
 # Run logrotate at regular intervals
 while true; do
     logrotate -s /var/lib/logrotate/status /etc/logrotate.d/app_logrotate
