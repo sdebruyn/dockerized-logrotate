@@ -2,10 +2,8 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ main ]
-  # Also trigger on new version tags, e.g., v1.0.0
-  tags:
-    - 'v*'
+    branches:
+      - main
 
 jobs:
   build-and-push:
@@ -19,9 +17,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: |
-          docker build -t ghcr.io/sdebruyn/dockerized-logrotate:latest .
+        run: docker build -t ghcr.io/sdebruyn/dockerized-logrotate:latest .
 
       - name: Push Docker image
-        run: |
-          docker push ghcr.io/sdebruyn/dockerized-logrotate:latest
+        run: docker push ghcr.io/sdebruyn/dockerized-logrotate:latest
