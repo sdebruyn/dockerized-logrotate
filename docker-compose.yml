@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  logrotate:
+    image: ghcr.io/sdebruyn/dockerized-logrotate:latest
+    container_name: logrotate_container
+    environment:
+      - LOGROTATE_INTERVAL=daily
+      - LOG_PATH=/logs
+      - MAX_SIZE=10M
+      - HISTORY=7
+      - COMPRESS=true
+      - DATEEXT=true
+      - RUN_INTERVAL=60
+    volumes:
+      # Mount your host log directory to the container log path.
+      - ./logs:/logs
