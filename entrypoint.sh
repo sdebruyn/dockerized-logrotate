@@ -46,7 +46,7 @@ mkdir -p /var/lib/logrotate
 
 # Run logrotate at regular intervals
 while true; do
-    logrotate -v -f -s /var/lib/logrotate/status /etc/logrotate.d/app_logrotate
+    logrotate -v -s /var/lib/logrotate/status /etc/logrotate.d/app_logrotate
     sleep ${RUN_INTERVAL}
 done
 
