@@ -10,8 +10,12 @@ COMPRESS="${COMPRESS:-true}"
 DATEEXT="${DATEEXT:-true}"
 RUN_INTERVAL="${RUN_INTERVAL:-60}"
 
+# Create config directory in user-writable location
+CONFIG_DIR="/tmp/logrotate"
+mkdir -p "${CONFIG_DIR}"
+
 # Create a logrotate configuration file dynamically
-cat <<EOF > /etc/logrotate.d/app_logrotate
+cat <<EOF > ${CONFIG_DIR}/app_logrotate
 ${LOG_PATH}/*.log {
     ${LOGROTATE_INTERVAL}
     maxsize ${MAX_SIZE}
@@ -22,32 +26,31 @@ ${LOG_PATH}/*.log {
 EOF
 
 if [ "${COMPRESS}" = "true" ]; then
-    echo "    compress" >> /etc/logrotate.d/app_logrotate
+    echo "    compress" >> ${CONFIG_DIR}/app_logrotate
 else
-    echo "    nocompress" >> /etc/logrotate.d/app_logrotate
+    echo "    nocompress" >> ${CONFIG_DIR}/app_logrotate
 fi
 
 if [ "${DATEEXT}" = "true" ]; then
-    echo "    dateext" >> /etc/logrotate.d/app_logrotate
+    echo "    dateext" >> ${CONFIG_DIR}/app_logrotate
 fi
 
-cat <<EOF >> /etc/logrotate.d/app_logrotate
+cat <<EOF >> ${CONFIG_DIR}/app_logrotate
     create
 }
 EOF
 
 echo "Using logrotate configuration:"
-cat /etc/logrotate.d/app_logrotate
+cat ${CONFIG_DIR}/app_logrotate
 
 # Ensure the log directory exists
 mkdir -p "${LOG_PATH}"
 
 # Ensure the status directory exists for logrotate
-mkdir -p /var/lib/logrotate
+mkdir -p /tmp/logrotate-status
 
 # Run logrotate at regular intervals
 while true; do
-    logrotate -v -s /var/lib/logrotate/status /etc/logrotate.d/app_logrotate
+    logrotate -v -s /tmp/logrotate-status/status ${CONFIG_DIR}/app_logrotate
     sleep ${RUN_INTERVAL}
 done
-
