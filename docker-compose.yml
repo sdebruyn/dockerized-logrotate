@@ -4,7 +4,6 @@ services:
   logrotate:
     image: ghcr.io/sdebruyn/dockerized-logrotate:latest
     container_name: logrotate_container
-    user: "UID:GUID"
     environment:
       - LOGROTATE_INTERVAL=daily
       - LOG_PATH=/logs
