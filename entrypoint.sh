@@ -12,6 +12,12 @@ RUN_INTERVAL="${RUN_INTERVAL:-60}"
 RUN_AS_USER="${RUN_AS_USER:-0}"
 RUN_AS_GROUP="${RUN_AS_GROUP:-0}"
 
+# Create user if it doesn't exist
+if ! id -u loguser >/dev/null 2>&1; then
+    addgroup -g $RUN_AS_GROUP loguser 2>/dev/null || true
+    adduser -D -u $RUN_AS_USER -G loguser loguser 2>/dev/null || true
+fi
+
 # Create config directory in user-writable location
 CONFIG_DIR="/tmp/logrotate"
 mkdir -p "${CONFIG_DIR}"
