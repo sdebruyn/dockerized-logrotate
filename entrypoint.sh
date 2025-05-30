@@ -31,7 +31,7 @@ ${LOG_PATH}/*.log {
     missingok
     notifempty
     copytruncate
-    su ${RUN_AS_USER} ${RUN_AS_GROUP}
+    su loguser loguser
 EOF
 
 if [ "${COMPRESS}" = "true" ]; then
