@@ -36,7 +36,7 @@ if [ "${DATEEXT}" = "true" ]; then
 fi
 
 cat <<EOF >> ${CONFIG_DIR}/app_logrotate
-    create
+    nocreate
 }
 EOF
 
