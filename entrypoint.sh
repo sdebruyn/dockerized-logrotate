@@ -14,8 +14,11 @@ RUN_AS_GROUP="${RUN_AS_GROUP:-0}"
 
 # Create user if it doesn't exist
 if ! id -u loguser >/dev/null 2>&1; then
-    addgroup -g $RUN_AS_GROUP loguser 2>/dev/null || true
-    adduser -D -u $RUN_AS_USER -G loguser loguser 2>/dev/null || true
+    echo "Creating loguser with UID:${RUN_AS_USER} GID:${RUN_AS_GROUP}"
+    addgroup -g $RUN_AS_GROUP loguser 2>/dev/null || echo "Group already exists or couldn't be created"
+    adduser -D -u $RUN_AS_USER -G loguser loguser 2>/dev/null || echo "User already exists or couldn't be created"
+else
+    echo "User loguser already exists"
 fi
 
 # Create config directory in user-writable location
@@ -32,6 +35,8 @@ ${LOG_PATH}/*.log {
     notifempty
     copytruncate
     su loguser loguser
+    nocreate
+    sharedscripts
 EOF
 
 if [ "${COMPRESS}" = "true" ]; then
@@ -42,12 +47,8 @@ fi
 
 if [ "${DATEEXT}" = "true" ]; then
     echo "    dateext" >> ${CONFIG_DIR}/app_logrotate
+    echo "    dateformat -%Y%m%d-%H%M%S" >> ${CONFIG_DIR}/app_logrotate
 fi
-
-cat <<EOF >> ${CONFIG_DIR}/app_logrotate
-    nocreate
-}
-EOF
 
 echo "Using logrotate configuration:"
 cat ${CONFIG_DIR}/app_logrotate
@@ -60,6 +61,15 @@ mkdir -p /tmp/logrotate-status
 
 # Run logrotate at regular intervals
 while true; do
-    logrotate -v -s /tmp/logrotate-status/status ${CONFIG_DIR}/app_logrotate
+    echo "Running logrotate at $(date)"
+    
+    # Run logrotate with force option only if debug mode is enabled, otherwise use normal mode
+    if [ "${DEBUG:-false}" = "true" ]; then
+        logrotate -d -v -s /tmp/logrotate-status/status ${CONFIG_DIR}/app_logrotate
+    else
+        logrotate -v -s /tmp/logrotate-status/status ${CONFIG_DIR}/app_logrotate
+    fi
+    
+    echo "Logrotate completed. Sleeping for ${RUN_INTERVAL} seconds..."
     sleep ${RUN_INTERVAL}
 done
