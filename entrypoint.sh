@@ -9,6 +9,8 @@ HISTORY="${HISTORY:-7}"
 COMPRESS="${COMPRESS:-true}"
 DATEEXT="${DATEEXT:-true}"
 RUN_INTERVAL="${RUN_INTERVAL:-60}"
+RUN_AS_USER="${RUN_AS_USER:-0}"
+RUN_AS_GROUP="${RUN_AS_GROUP:-0}"
 
 # Create config directory in user-writable location
 CONFIG_DIR="/tmp/logrotate"
@@ -23,6 +25,7 @@ ${LOG_PATH}/*.log {
     missingok
     notifempty
     copytruncate
+    su ${RUN_AS_USER} ${RUN_AS_GROUP}
 EOF
 
 if [ "${COMPRESS}" = "true" ]; then

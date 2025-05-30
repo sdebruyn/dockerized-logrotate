@@ -13,5 +13,7 @@ Set the following environment variables to customize the container:
 - **COMPRESS:** Enable compression (`true` or `false`). Default: `true`
 - **DATEEXT:** Append dates to rotated filenames (`true` or `false`). Default: `true`
 - **RUN_INTERVAL:** Interval in seconds between logrotate executions. Default: `60`
+- **RUN_AS_USER:** User to run logrotate as.
+- **RUN_AS_GROUP:** Group to run logrotate as.
 
 See [Docker Compose file](docker-compose.yml) for an example configuration.

@@ -4,6 +4,7 @@ services:
   logrotate:
     image: ghcr.io/sdebruyn/dockerized-logrotate:latest
     container_name: logrotate_container
+    user: "UID:GUID"
     environment:
       - LOGROTATE_INTERVAL=daily
       - LOG_PATH=/logs
@@ -12,6 +13,8 @@ services:
       - COMPRESS=true
       - DATEEXT=true
       - RUN_INTERVAL=60
+      - RUN_AS_USER=UID
+      - RUN_AS_GROUP=GUID
     volumes:
       # Mount your host log directory to the container log path.
       - ./logs:/logs
